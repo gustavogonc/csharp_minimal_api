@@ -39,11 +39,17 @@ app.MapGet("/getproduct", ([FromQuery] string dateStart, [FromQuery] string date
     return dateStart + " - " + dateEnd;
 
 });
+
 //api.app.com/user/{code}
 app.MapGet("/getproduct/{code}", ([FromRoute] string code) =>
 {
     return code;
 
+});
+
+app.MapGet("/getproductbyheader", (HttpRequest request) =>
+{
+    return request.Headers["product-code"].ToString();
 });
 
 app.Run();
