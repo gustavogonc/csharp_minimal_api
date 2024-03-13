@@ -26,4 +26,14 @@ app.MapGet("/AddHeader", (HttpResponse response) =>
     return new {Name = "Gustavo Gonçalves", Age = 23};
 });
 
+app.MapPost("/saveProduct", (Product product) => {
+    return product.Code + " - " + product.Name;
+});
+
 app.Run();
+
+public class Product
+{
+    public string Code { get; set; }
+    public string Name { get; set; }
+}
