@@ -52,6 +52,8 @@ app.MapGet("/getproductbyheader", (HttpRequest request) =>
     return request.Headers["product-code"].ToString();
 });
 
+
+
 app.Run();
 
 public class Product
