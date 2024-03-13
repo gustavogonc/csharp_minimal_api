@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,11 +25,25 @@ app.MapPost("/user", () => new { Name = "Gustavo Gonçalves", Age = 23 });
 app.MapGet("/AddHeader", (HttpResponse response) =>
 {
     response.Headers.Add("Teste", "Gustavo Goncalves");
-    return new {Name = "Gustavo Gonçalves", Age = 23};
+    return new { Name = "Gustavo Gonçalves", Age = 23 };
 });
 
-app.MapPost("/saveProduct", (Product product) => {
+app.MapPost("/saveProduct", (Product product) =>
+{
     return product.Code + " - " + product.Name;
+});
+
+//api.app.com/users?datastart={date}&dateend={date}
+app.MapGet("/getproduct", ([FromQuery] string dateStart, [FromQuery] string dateEnd) =>
+{
+    return dateStart + " - " + dateEnd;
+
+});
+//api.app.com/user/{code}
+app.MapGet("/getproduct/{code}", ([FromRoute] string code) =>
+{
+    return code;
+
 });
 
 app.Run();
