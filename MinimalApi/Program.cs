@@ -18,46 +18,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Hello World!");
-
-app.MapPost("/user", () => new { Name = "Gustavo Gonçalves", Age = 23 });
-
-app.MapGet("/AddHeader", (HttpResponse response) =>
-{
-    response.Headers.Add("Teste", "Gustavo Goncalves");
-    return new { Name = "Gustavo Gonçalves", Age = 23 };
-});
-
-app.MapPost("/saveProduct", (Product product) =>
+app.MapPost("/products", (Product product) =>
 {
     ProductRepository.Add(product);
 });
 
-//api.app.com/users?datastart={date}&dateend={date}
-app.MapGet("/getproduct", ([FromQuery] string dateStart, [FromQuery] string dateEnd) =>
-{
-    return dateStart + " - " + dateEnd;
-
-});
-
 //api.app.com/user/{code}
-app.MapGet("/getproduct/{code}", ([FromRoute] string code) =>
+app.MapGet("/products/{code}", ([FromRoute] string code) =>
 {
     var product = ProductRepository.GetBy(code);
     return product;
 });
 
-app.MapGet("/getproductbyheader", (HttpRequest request) =>
-{
-    return request.Headers["product-code"].ToString();
-});
-
-app.MapPut("/editproduct", (Product product) => {
+app.MapPut("/products", (Product product) => {
     var productSaved = ProductRepository.GetBy(product.Code);
     productSaved.Name = product.Name;
 });
 
-app.MapDelete("deleteporduct/{code}", ([FromRoute] string code) =>
+app.MapDelete("products/{code}", ([FromRoute] string code) =>
 {
     var productSaved = ProductRepository.GetBy(code);
     ProductRepository.Remove(productSaved);
