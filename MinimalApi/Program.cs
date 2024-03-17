@@ -33,23 +33,33 @@ app.MapPost("/products", (ProductRequest productRequest, ApplicationDbContext co
         Description = productRequest.Description,
         Category = category
     };
+
+    if (productRequest.Tags != null)
+    {
+        product.Tags = new List<Tag>();
+        productRequest.Tags.ForEach(t =>
+        {
+            product.Tags.Add(new Tag { Name = t });
+        });
+    }
     context.Products.Add(product);
     context.SaveChanges();
     return Results.Created($"/products/{product.Id}", product.Id);
 });
 
 //api.app.com/user/{code}
-app.MapGet("/products/{code}", ([FromRoute] string code) =>
+app.MapGet("/products/{id}", ([FromRoute] int id, ApplicationDbContext context) =>
 {
-    var product = ProductRepository.GetBy(code);
-    if(product != null)
+    var product = context.Products.Where(p => p.Id == id).First();
+    if (product != null)
     {
         return Results.Ok(product);
     }
     return Results.NotFound();
 });
 
-app.MapPut("/products", (Product product) => {
+app.MapPut("/products", (Product product) =>
+{
     var productSaved = ProductRepository.GetBy(product.Code);
     productSaved.Name = product.Name;
     return Results.Ok();
