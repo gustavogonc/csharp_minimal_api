@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration["Database:SqlServer"]);
 
 var configuration = app.Configuration;
 ProductRepository.Init(configuration);
@@ -119,6 +119,10 @@ public class Product
 
 public class ApplicationDbContext: DbContext
 {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
+    {
+
+    }
     public DbSet<Product> Products { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -130,7 +134,4 @@ public class ApplicationDbContext: DbContext
         modelBuilder.Entity<Product>()
             .Property(p => p.Code).HasMaxLength(20).IsRequired();
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlServer("Server=localhost; Database=Products; User Id=sa; Password=<@Sql2022>;MultipleActiveResultSets=true;Encrypt=YES;TrustServerCertificate=YES");
-    
 }
